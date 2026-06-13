@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 # ========== 配置 ==========
 DEEPSEEK_KEY = "sk-cbfbe30aa0d547f4be32a9f789450018"          # ← 改这里
-ADMIN_TOKEN = "KTO算法-美术老师"
+ADMIN_TOKEN = "KTO2024meishu"
 
 user_data = {}
 
