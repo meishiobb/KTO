@@ -21,29 +21,13 @@ def get_user_id():
 # ========== AI 生成算法 ==========
 
 def generate_algo_code(idea):
-    prompt = f"""你是一个预测算法生成器，用于PC28彩票游戏。
-
-【游戏规则】
-- 每期开出3个数字(x,y,z)，每个数字范围0-9，和值s=x+y+z，范围0-27
-- 分类：小双(s≤13且偶)、小单(s≤13且奇)、大双(s>13且偶)、大单(s>13且奇)
-- 用户每期选三个组合下注，排除一个
-- 目标：预测下一期应该排除哪个组合
-
-【函数要求】
-函数名：predict
-输入：history（整数和值列表，最新在最后）
-返回：'小双'、'小单'、'大双' 或 '大单'
-
-【用户策略】
-{idea}
-
-只输出Python代码，包含 def predict(history): 并以return结尾。"""
+    prompt = f"""你是PC28预测算法生成器。生成Python函数 predict(history)，history是历史和值列表，返回'小双'/'小单'/'大双'/'大单'。规则：s≤13且偶=小双，s≤13且奇=小单，s>13且偶=大双，s>13且奇=大单。策略：{idea}。只输出代码，格式：def predict(history):\\n    ...\\n    return '组合名'"""
     
     headers = {"Authorization": f"Bearer {DEEPSEEK_KEY}", "Content-Type": "application/json"}
-    payload = {"model": "deepseek-chat", "messages": [{"role": "user", "content": prompt}], "temperature": 0.2}
+    payload = {"model": "deepseek-chat", "messages": [{"role": "user", "content": prompt}], "temperature": 0.1, "max_tokens": 200}
     
     try:
-        r = requests.post("https://api.deepseek.com/v1/chat/completions", json=payload, headers=headers, timeout=30)
+        r = requests.post("https://api.deepseek.com/v1/chat/completions", json=payload, headers=headers, timeout=8)
         if r.status_code == 200:
             code = r.json()["choices"][0]["message"]["content"]
             if "```" in code:
